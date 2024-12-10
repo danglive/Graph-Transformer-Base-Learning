@@ -1,0 +1,41 @@
+# config.yaml
+
+type_data: 'IEEE_14' # IEEE_118 for power grid
+
+task: train  # Options: train, evaluate, inference
+device: 'cuda:1'  # Options: 'cpu', 'cuda:0', 'cuda:1', etc.
+
+training_method: 'mae'  # Options: 'mae', 'multi-class', 'multi-label'
+use_pretrained: false   # Set to true if using a pretrained encoder
+pretrained_path: ''     # Path to the pretrained encoder checkpoint
+
+model:
+  dim: 256
+  depth: 3
+  num_classes: 47          # Number of classes (for classification tasks)
+  num_feature_node: 4      # Number of node features
+  num_feature_edge: 13     # Number of edge features
+  dropout_rate: 0.5        # Dropout rate to avoid overfitting
+  activation: 'gelu'       # Activation function for feedforward layers
+  mask_ratio: 0.15         # Mask ratio for MAE (only used in MAE training)
+  mask_feature_per_node: 0 # Number of features to mask per node (set > 0 for Feature-Level Masking (feature number), set = 0 for Node-Level Masking)
+
+
+training:
+  load_checkpoint: false #"output_IEEE_14_multi-class/model_checkpoint.pth" # null if train from initial
+  num_epochs: 10
+  early_stop_threshold: 100
+  save_best_model: true
+  step_lr: 50
+  weight_decay: 1e-5
+  learning_rate: 0.00025
+  batch_size: 32
+  model_path: 'model_checkpoint'
+  seed: 42
+
+data:
+  split: null                                  # Empty string indicates no split; load dataset directly
+  dataset_train_name: 'dangvantuan/IEEE_14_dataset'
+  dataset_test_name:  'dangvantuan/IEEE_14_dataset-test'
+
+evaluate_unseen: true  # Whether to evaluate on the unseen test set
